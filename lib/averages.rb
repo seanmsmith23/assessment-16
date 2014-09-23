@@ -8,23 +8,13 @@ class DashboardData
     containers = group_by_container
     @container_averages = {}
     containers.each do |container, records|
-      @container_averages[container.to_sym] = {
-        ph: averages_for(:ph, records),
-        nutrient_solution_level: averages_for(:nutrient_solution_level, records),
-        temperature: averages_for(:temperature, records),
-        water_level: averages_for(:water_level, records),
-      }
+      @container_averages[container.to_sym] = averages_for_each_metric(records)
     end
     @container_averages
   end
 
   def averages_for_all_containers
-    {
-      ph: averages_for(:ph, @parsed_metrics),
-      nutrient_solution_level: averages_for(:nutrient_solution_level, @parsed_metrics),
-      temperature: averages_for(:temperature, @parsed_metrics),
-      water_level: averages_for(:water_level, @parsed_metrics),
-    }
+    averages_for_each_metric(@parsed_metrics)
   end
 
   def highest_water_container
@@ -82,6 +72,15 @@ class DashboardData
       count += 1
     end
     (total/count).round(2)
+  end
+
+  def averages_for_each_metric(records)
+    {
+      ph: averages_for(:ph, records),
+      nutrient_solution_level: averages_for(:nutrient_solution_level, records),
+      temperature: averages_for(:temperature, records),
+      water_level: averages_for(:water_level, records),
+    }
   end
 
 end

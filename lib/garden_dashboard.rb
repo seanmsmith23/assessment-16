@@ -55,3 +55,4 @@ ap dashboard.container_averages
 ap dashboard.highest_water_container
 ap dashboard.highest_average_temperature
 ap dashboard.averages_for_all_containers
+ap dashboard.highest_ph_by_date()
