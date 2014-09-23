@@ -18,44 +18,33 @@ class DashboardData
   end
 
   def highest_water_container
-    highest_container = "none"
-    highest_water = 0
-    @parsed_metrics.each do |record|
-      water = record[:water_level].to_f
-      if water > highest_water
-        highest_water = water
-        highest_container = record[:container]
-      end
-    end
-    highest_container
+    @parsed_metrics.max_by{|record| record[:water_level]}[:container]
   end
 
   def highest_average_temperature
-    highest_container = "none"
-    highest_temp = 0
+    track_highest = container_and_value_tracker
     @container_averages.each do |k,v|
-      if v[:temperature] > highest_temp
-        highest_temp = v[:temperature]
-        highest_container = k.to_s
+      if v[:temperature] > track_highest[:value]
+        track_highest[:value] = v[:temperature]
+        track_highest[:container] = k.to_s
       end
     end
-    highest_container
+    track_highest[:container]
   end
 
   def highest_ph_by_date(start, finish)
-    highest_container = "none"
-    highest_ph = 0
+    track_highest = container_and_value_tracker
     start_date = Date.parse(start)
     end_date = Date.parse(finish)
     @parsed_metrics.each do |record|
       ph = record[:ph].to_f
       timestamp = Date.parse(record[:timestamp])
-      if ph > highest_ph && timestamp > start_date && timestamp < end_date
-        highest_ph = ph
-        highest_container = record[:container]
+      if ph > track_highest[:value] && timestamp > start_date && timestamp < end_date
+        track_highest[:value] = ph
+        track_highest[:container] = record[:container]
       end
     end
-    highest_container
+    track_highest[:container]
   end
 
   private
@@ -81,6 +70,10 @@ class DashboardData
       temperature: averages_for(:temperature, records),
       water_level: averages_for(:water_level, records),
     }
+  end
+
+  def container_and_value_tracker
+    {container: "none", value: 0}
   end
 
 end

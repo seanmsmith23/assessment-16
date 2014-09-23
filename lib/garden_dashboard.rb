@@ -49,10 +49,10 @@ end
 
 metrics = MetricsParser.new('/Users/seansmith/gSchoolWork/assessments/g3-assessment-week-16/data/metrics.tsv')
 ap parsed = metrics.parse
+# binding.pry
 
 dashboard = DashboardData.new(parsed)
 ap dashboard.container_averages
 ap dashboard.highest_water_container
 ap dashboard.highest_average_temperature
 ap dashboard.averages_for_all_containers
-ap dashboard.highest_ph_by_date()
